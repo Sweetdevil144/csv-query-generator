@@ -2,7 +2,7 @@ import csv
 import openai
 
 # Set your OpenAI API key here.
-openai.api_key = 'YOUR_API_KEY'
+openai.api_key = 'YOUR-API-KEY'
 
 
 def remove_blank_lines(text):
@@ -16,7 +16,7 @@ def generate_conversations(query):
                 "role": "system",
                 "content": "You are a digital number extractor. Regardless of the nature of the question, respond ONLY "
                            "with the direct numerical data or numeric ranges related to the query. Any contextual, "
-                           "descriptive, or explanatory text should be excluded. Think of yourself as a machine that can "
+                           "descriptive,or explanatory text should be excluded. Think of yourself as a machine that can"
                            "only display numbers in response to questions."
             },
             {
