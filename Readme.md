@@ -1,36 +1,51 @@
-# Digital Number Extractor
+# README.md for Average Costs Fetcher
 
-## Overview
-This script uses OpenAI's GPT-3.5 model to answer questions about the average cost range and annual visits for various venues or services in California. It reads a list of queries from a CSV file and then writes the model's responses back to another CSV file.
+## Introduction
+This script leverages the power of OpenAI's GPT-3.5 API to fetch average costs for a list of queries provided in a CSV file.
 
-## Requirements
-- Python 3.x
-- OpenAI Python package
-- CSV file containing the list of queries
+## Dependencies
+- `csv`: In-built Python library for reading and writing CSV files.
+- `openai`: The official Python client for the OpenAI API. Make sure to have it installed:
 
-## Setup
-1. Install the OpenAI Python package:  
+  ```bash
+  pip install openai
+  ```
+
+## Setting Up
+Before using this script, ensure you have:
+
+1. An active OpenAI API subscription.
+2. Your OpenAI API key. You'll set this in the `openai.api_key` section of the script. For example:
+
+   ```python
+        openai.api_key = 'YOUR_GPT_3.5_API_KEY'
    ```
-   pip install openai
+
+## How To Use
+
+1. Prepare your input file, `data.csv`. Each line in this file should contain a single query for which you want to fetch the average cost.
+
+2. Run the script:
+
+   ```bash
+   python your_script_name.py
    ```
 
-2. Set your OpenAI API key as an environment variable or within the script.
+3. After executing the script, you'll find the results in `result.csv`. This file will contain the numeric values of the average costs for each query.
 
-## Usage
-Run the script using:
-```
-python main.py
-```
-The script will read the queries from `data.csv` and write the results to `result.csv`.
+## Functions Overview
 
-## New Features
-1. The model now provides generalized estimates for queries it cannot answer with specific information.  
-2. The model responds only with numerical data or numeric ranges as per updated instructions.
+- `remove_blank_lines(text)`: Removes blank lines from the text.
 
-## Limitations
-- The model may still return 'unknown' for some specific or localized queries, flag such queries for manual research.
-- The numbers provided are estimates and should be used as such.
+- `generate_conversation(query)`: Generates a conversation format that instructs the model to only respond with numeric values for the given query.
 
----
+- `main()`: The main function that reads queries from `data.csv`, gets the responses from OpenAI API, and writes the results to `result.csv`.
 
-Feel free to add more sections or details as you find appropriate for your project.
+## Important Notes
+
+- Make sure your API key is kept confidential. Avoid sharing your script with the API key embedded.
+- Be cautious about the number of queries in `data.csv` as you'll be billed per token by OpenAI. Large numbers of queries can incur significant costs.
+- The current script instructs the model to respond only with numbers. Adjust the instruction if you have different requirements.
+
+## Contribution & Support
+Feel free to fork this repository or submit pull requests with enhancements. For any issues or support, open an issue on the repository.
