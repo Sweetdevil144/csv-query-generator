@@ -18,7 +18,7 @@ Before using this script, ensure you have:
 2. Your OpenAI API key. You'll set this in the `openai.api_key` section of the script. For example:
 
    ```python
-    openai.api_key = 'YOUR_GPT_3.5_API_KEY'
+        openai.api_key = 'YOUR_GPT_3.5_API_KEY'
    ```
 
 ## How To Use
