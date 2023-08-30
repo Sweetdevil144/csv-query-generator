@@ -2,24 +2,42 @@ import csv
 import openai
 
 # Set your OpenAI API key here.
-openai.api_key = 'YOUR_GPT_3.5_API_KEY'
+openai.api_key = 'YOUR_API_KEY'
 
 
 def remove_blank_lines(text):
     return "\n".join(line for line in text.split("\n") if line.strip())
 
 
-def generate_conversation(query):
+def generate_conversations(query):
     return [
-        {
-            "role": "system",
-            "content": "For each item listed, please provide the average cost. Only respond with exact numbers or "
-                       "number ranges. Ignore the question if no numbers are relevant. Do not use words, only numbers."
-        },
-        {
-            "role": "user",
-            "content": f"What is the average costs of {query}, please respond only in numeric values."
-        }
+        [
+            {
+                "role": "system",
+                "content": "You are a digital number extractor. Regardless of the nature of the question, respond ONLY "
+                           "with the direct numerical data or numeric ranges related to the query. Any contextual, "
+                           "descriptive, or explanatory text should be excluded. Think of yourself as a machine that can "
+                           "only display numbers in response to questions."
+            },
+            {
+                "role": "user",
+                "content": f"What's the typical cost range when visiting or using an {query}?"
+            }
+        ],
+        [
+            {
+                "role": "system",
+                "content": "You are a digital number extractor. Regardless of the nature of the question, respond ONLY "
+                           "with the direct numerical data or numeric ranges related to the query. Any contextual, "
+                           "descriptive, or explanatory text should be excluded. Think of yourself as a machine that "
+                           "can only display numbers in response to questions. If you do not have specific "
+                           "information, provide a generalized estimate based on similar venues or services."
+            },
+            {
+                "role": "user",
+                "content": f"Can you give me an estimate of how many people in California visit an {query} each year?"
+            }
+        ]
     ]
 
 
@@ -27,21 +45,23 @@ def main():
     # Read from data.csv
     with open('data.csv', 'r') as infile:
         csv_reader = csv.reader(infile)
-        queries = [row[0] for row in csv_reader]  # Each row contains a full query
-
-    results = []
-    for query in queries:
-        conversation = generate_conversation(query)
-        response = openai.ChatCompletion.create(model="gpt-3.5-turbo-16k", messages=conversation).choices[0].message[
-            'content']
-        response = remove_blank_lines(response)
-        results.append([query, response])
+        queries = [row[0] for row in csv_reader]
 
     # Write results to result.csv
     with open('result.csv', 'w', newline='') as outfile:
         csv_writer = csv.writer(outfile)
-        for _, response in results:
-            csv_writer.writerow([response])
+        csv_writer.writerow(["Query", "Average Cost (Range)", "Annual Visits in California"])
+
+        for query in queries:
+            conversations = generate_conversations(query)
+            row = [query]
+            for conversation in conversations:
+                response = \
+                openai.ChatCompletion.create(model="gpt-3.5-turbo-16k", messages=conversation).choices[0].message[
+                    'content']
+                response = remove_blank_lines(response)
+                row.append(response)
+            csv_writer.writerow(row)
 
 
 if __name__ == '__main__':
